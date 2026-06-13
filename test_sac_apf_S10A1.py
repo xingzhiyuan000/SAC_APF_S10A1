@@ -12,8 +12,8 @@ import ENV.Tools as tools
 import ENV.Evaluation as eva
 
 import config
-from agent_sac_apf_S10A3 import SACAgent
-from env_LH4500_APF_Mill_S10A3 import ENV_APF
+from agent_sac_apf_S10A1 import SACAgent
+from env_LH4500_APF_Mill_S10A1 import ENV_APF
 
 
 device=torch.device(config.DEVICE)  # 训练设备
