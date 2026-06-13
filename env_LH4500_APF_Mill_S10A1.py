@@ -69,8 +69,6 @@ class ENV_APF:
     def step(self, a, eposide_i, step_i, update_state=True):
 
         k_rep_q4 = a[0]   # q4更新权重
-        k_rep_q5 = a[1]   # q5更新权重
-        k_rep_q6 = a[2]   # q6更新权重
 
         q_c_norm = self.current_state[:7]                           # 当前关节
         q_c_rad = tools.denormalize_q(q_c_norm, self.params)        # 当前关节_rad
@@ -92,8 +90,6 @@ class ENV_APF:
         k_step = tools.step_weight(d_c, self.d_max, w_min=0.001, w_max=1) #依据末端位置误差
         # 线性插值控制排斥强度 knew=s⋅k+(1−s)⋅1
         k_rep_q4 = k_step * k_rep_q4 + (1 - k_step)
-        k_rep_q5 = k_step * k_rep_q5 + (1 - k_step)
-        k_rep_q6 = k_step * k_rep_q6 + (1 - k_step)
 
         # 合力方向计算
         F_total_norm = F_att_norm    # 合力单位方向
@@ -101,12 +97,6 @@ class ENV_APF:
         # 更新关节
         update_step_rad_current=self.update_step_rad.copy()
         update_step_rad_current[3] *= k_rep_q4  # q4更新步长更新
-        update_step_rad_current[4] *= k_rep_q5  # q5更新步长更新
-        update_step_rad_current[5] *= k_rep_q6  # q6更新步长更新
-
-        # update_step_rad_current[3] = update_step_rad_current[3]+ k_step*update_step_rad_current[3]*k_rep_q4  # q4更新步长更新
-        # update_step_rad_current[4] = update_step_rad_current[4]+ k_step*update_step_rad_current[4]*k_rep_q5  # q5更新步长更新
-        # update_step_rad_current[5] = update_step_rad_current[5]+ k_step*update_step_rad_current[5]*k_rep_q6  # q6更新步长更新
 
         q_next_rad = q_c_rad + update_step_rad_current * F_total_norm
         # 关节极限限制
@@ -216,8 +206,6 @@ class ENV_APF:
             "success": success_done and collision_free,
             "reach": success_done,
             "res_rep_q4": k_rep_q4,
-            "res_rep_q5": k_rep_q5,
-            "res_rep_q6": k_rep_q6,
             "collision_done": collision_done,
             "reward_tcp2target": res_r_tcp2target,
             "reward_orientation": res_r_orientation,
@@ -237,8 +225,6 @@ class ENV_APF:
         #     f"@第{eposide_i + 1}局,"
         #     f"第{step_i + 1}步,"
         #     f"@更新权重q4:{k_rep_q4:.1f}, "
-        #     f"@更新权重q5:{k_rep_q5:.1f}, "
-        #     f"@更新权重q6:{k_rep_q6:.1f}, "
         #     f"@位置误差:{pos_err:.2f}, "
         #     f"@位置奖惩:{res_r_tcp2target:.2f}, "
         #     f"@姿态误差:{ori_err:.2f}, "
