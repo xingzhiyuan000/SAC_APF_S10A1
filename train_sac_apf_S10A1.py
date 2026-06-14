@@ -38,7 +38,7 @@ NUM_STEP = params.num_step      #每局最多步数
 
 EPSILON_START = 1.0
 EPSILON_END = 0.0
-EPSILON_DECAY = NUM_EPISODE*NUM_STEP * 0.6  # 探索衰减
+EPSILON_DECAY = NUM_EPISODE*NUM_STEP * 0.5  # 探索衰减
 best_reward = -1e10
 
 STATE_DIM = 10              # 输入状态维度: 7个当前关节驱动量+位置误差+姿态误差+是否成功
