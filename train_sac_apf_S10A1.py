@@ -32,13 +32,13 @@ params = mpParams() # 通用参数
 device=torch.device(config.DEVICE)  # 训练设备
 Env = ENV_APF(params)               # 场景环境
 
-PLOT_REWARD=True                #是否绘图
-NUM_EPISODE = 500               #玩多少局
-NUM_STEP = params.num_step      #每局最多步数
+PLOT_REWARD=True                    #是否绘图
+NUM_EPISODE = params.num_episode    #玩多少局 500
+NUM_STEP = params.num_step          #每局最多步数
 
-EPSILON_START = 1.0
-EPSILON_END = 0.0
-EPSILON_DECAY = NUM_EPISODE*NUM_STEP * 0.5  # 探索衰减
+EPSILON_START = params.EPSILON_START
+EPSILON_END = params.EPSILON_END
+EPSILON_DECAY = NUM_EPISODE*NUM_STEP * params.EPSILON_DECAY_RATE  # 探索衰减
 best_reward = -1e10
 
 STATE_DIM = 10              # 输入状态维度: 7个当前关节驱动量+位置误差+姿态误差+是否成功
