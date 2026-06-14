@@ -29,7 +29,7 @@ data_dir = current_path+"/data/"
 data_path = os.path.join(data_dir, "Q_deg.xlsx")
 
 model=current_path+"/models/"
-actor_path= model + "sac_apf_actor_A3_20260613115655.pth"
+actor_path= model + "sac_apf_actor_S10A1_20260613130831.pth"
 
 # 实例化Agent
 agent=SACAgent(

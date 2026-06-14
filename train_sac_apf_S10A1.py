@@ -33,7 +33,7 @@ device=torch.device(config.DEVICE)  # 训练设备
 Env = ENV_APF(params)               # 场景环境
 
 PLOT_REWARD=True                #是否绘图
-NUM_EPISODE = 500               #玩多少局
+NUM_EPISODE = 5               #玩多少局
 NUM_STEP = params.num_step      #每局最多步数
 
 EPSILON_START = 1.0
@@ -116,12 +116,14 @@ for episode_i in range(NUM_EPISODE):
     k_step=1
 
     q4_action_arr = np.array([-10, 0])
+    random_count = 0  # 随机动作次数
     for step_i in range(NUM_STEP):
 
         epsilon = np.interp(x=episode_i * NUM_STEP + step_i, xp=[0, EPSILON_DECAY], fp=[EPSILON_START, EPSILON_END])
         random_sample = random.random()
 
         if random_sample <= epsilon:
+            random_count += 1
             best_explor_reward = -1e10  # 探索最大奖励
             for explorer_i in range(NUM_EXPLORE):
                 # ε-贪心探索策略
@@ -234,7 +236,7 @@ for episode_i in range(NUM_EPISODE):
     )
 
     # 平均每步奖励最大
-    if avg_step_reward > best_reward:
+    if avg_step_reward > best_reward and random_count==0:
         best_reward = avg_step_reward
         torch.save(agent.actor.state_dict(), model + f"sac_apf_actor_S10A1_{timestamp}.pth")
         print(f"...saving best model reward:{round(best_reward, 2)}")
