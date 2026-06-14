@@ -37,7 +37,7 @@ NUM_EPISODE = 500               #玩多少局
 NUM_STEP = params.num_step      #每局最多步数
 
 EPSILON_START = 1.0
-EPSILON_END = 0.02
+EPSILON_END = 0.0
 EPSILON_DECAY = NUM_EPISODE*NUM_STEP * 0.6  # 探索衰减
 best_reward = -1e10
 
@@ -153,7 +153,7 @@ for episode_i in range(NUM_EPISODE):
                     best_action = action
 
                     # 探索范围更改
-                    if action[0]>(q4_action_arr[1]-q4_action_arr[0])/2:
+                    if action[0]>(q4_action_arr[1]+q4_action_arr[0])/2:
                         q4_action_arr[0]=action[0]-(q4_action_arr[1]-action[0])
                     else:
                         q4_action_arr[1] = action[0] + (action[0]-q4_action_arr[0])
@@ -239,17 +239,17 @@ for episode_i in range(NUM_EPISODE):
     if avg_step_reward > best_reward:
         best_reward = avg_step_reward
 
-    if avg_step_reward > best_reward and random_count==0:
+    if  success_flag and random_count==0:
         torch.save(agent.actor.state_dict(), model + f"sac_apf_actor_S10A1_{timestamp}.pth")
         print(f"...saving best model reward:{round(best_reward, 2)}")
 
-    print(f"--------Episode{episode_i+1}", 'reward %.2f' % episode_reward,'avg_step_best_reward %.2f' % best_reward, "--------")
-
-
+    print(
+        f"--------随机探索次数: {random_count},"
+        f"训练成功率: {round(success_count/NUM_EPISODE, 2)},"
+        f"平均每步最大奖励: {best_reward:.2f},--------")
 
     if collision_count == 0 and success_flag == 1:
         success_count += 1
-    print(f"------平均每步最大奖励:{best_reward:.2f}, 训练成功率:{round(success_count/NUM_EPISODE, 2)}")
 
 # 【回合奖励】导出为EXCEL
 df = pd.DataFrame(REWARD_BUFFER)                # 转成 DataFrame
