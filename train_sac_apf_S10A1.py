@@ -33,7 +33,7 @@ device=torch.device(config.DEVICE)  # 训练设备
 Env = ENV_APF(params)               # 场景环境
 
 PLOT_REWARD=True                #是否绘图
-NUM_EPISODE = 5               #玩多少局
+NUM_EPISODE = 500               #玩多少局
 NUM_STEP = params.num_step      #每局最多步数
 
 EPSILON_START = 1.0
@@ -236,10 +236,15 @@ for episode_i in range(NUM_EPISODE):
     )
 
     # 平均每步奖励最大
-    if avg_step_reward > best_reward and random_count==0:
+    if avg_step_reward > best_reward:
         best_reward = avg_step_reward
+
+    if avg_step_reward > best_reward and random_count==0:
         torch.save(agent.actor.state_dict(), model + f"sac_apf_actor_S10A1_{timestamp}.pth")
         print(f"...saving best model reward:{round(best_reward, 2)}")
+
+    print(f"--------Episode{episode_i+1}", 'reward %.2f' % episode_reward,'avg_step_best_reward %.2f' % best_reward, "--------")
+
 
 
     if collision_count == 0 and success_flag == 1:
